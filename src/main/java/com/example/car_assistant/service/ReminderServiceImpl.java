@@ -80,7 +80,7 @@ public class ReminderServiceImpl implements ReminderService {
                 .getItp()
                 .isEqual(LocalDate.now().plusDays(10))) {
             emailService.sendMail(user.getEmail(), "Your itp will expire in 10 days",
-                    "Hello" + " " + user.getLastName() + "," + "\n" + "    Your itp will expire in 10 days");
+                    "Hello" + " " + user.getLastName() + "," + "\n" + readFileForItpWillExpiredIn10Days());
         } else if (reminderRepository.findReminderByCarId(carId).getItp().isEqual(LocalDate.now())) {
             emailService.sendMail(user.getEmail(), "Your ITP has expired ",
                     "Hello" + " " + user.getLastName() + "," + "\n" + readFileForItp());
@@ -89,6 +89,11 @@ public class ReminderServiceImpl implements ReminderService {
 
     public String readFileForItp() throws IOException {
         File resource = new ClassPathResource("itpTextForMail.txt").getFile();
+        return new String(Files.readAllBytes(resource.toPath()));
+    }
+
+    public String readFileForItpWillExpiredIn10Days() throws IOException {
+        File resource = new ClassPathResource("textForItpWillExpiredIn10Days.txt").getFile();
         return new String(Files.readAllBytes(resource.toPath()));
     }
 

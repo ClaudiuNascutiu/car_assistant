@@ -44,8 +44,14 @@ public class ReminderController {
         reminderService.deleteReminder(id);
     }
 
-    @GetMapping("/user/{userId}/{carId}")
+    @GetMapping("/itp/{userId}/{carId}")
     public void expiredItp(@PathVariable Long userId, @PathVariable Long carId) throws IOException {
         reminderService.expiredItp(userId, carId);
     }
+
+    @GetMapping("/insurance/{userId}/{carId}")
+    public void expiredInsurance(@PathVariable Long userId, @PathVariable Long carId) throws IOException {
+        reminderService.expiredInsurance(userId, carId);
+    }
+
 }

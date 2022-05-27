@@ -27,7 +27,9 @@ public class ReminderServiceImpl implements ReminderService {
 
     private UserRepository userRepository;
 
-    public ReminderServiceImpl(ReminderRepository reminderRepository, CarRepository carRepository, EmailService emailService, UserRepository userRepository) {
+    private User user;
+
+    public ReminderServiceImpl(ReminderRepository reminderRepository, CarRepository carRepository, EmailService emailService, UserRepository userRepository ) {
         this.reminderRepository = reminderRepository;
         this.carRepository = carRepository;
         this.emailService = emailService;
@@ -75,15 +77,32 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     public void expiredItp(Long userId, Long carId) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException("No user"));
+        user = userRepository.findById(userId).orElseThrow(() -> new CustomException("No user"));
         if (reminderRepository.findReminderByCarId(carId)
                 .getItp()
                 .isEqual(LocalDate.now().plusDays(10))) {
-            emailService.sendMail(user.getEmail(), "Your itp will expire in 10 days",
-                    "Hello" + " " + user.getLastName() + "," + "\n" + readFileForItpWillExpiredIn10Days());
+            emailService.sendMail(user.getEmail(), "Itp-ul tau urmeaza sa expire in 10 zile!",
+                    "Salut" + " " + user.getLastName() + "," + "\n" + readFileForItpWillExpiredIn10Days());
         } else if (reminderRepository.findReminderByCarId(carId).getItp().isEqual(LocalDate.now())) {
-            emailService.sendMail(user.getEmail(), "Your ITP has expired ",
-                    "Hello" + " " + user.getLastName() + "," + "\n" + readFileForItp());
+            emailService.sendMail(user.getEmail(), "Itp-ul tau a expirat ",
+                    "Salut" + " " + user.getLastName() + "," + "\n" + readFileForItp());
+        }
+    }
+
+    @Override
+    public void expiredInsurance(Long userId, Long carId) throws IOException {
+        user = userRepository.findById(userId).orElseThrow(() -> new CustomException("No user"));
+        if (reminderRepository.findReminderByCarId(carId)
+                .getRca()
+                .isEqual(LocalDate.now().plusDays(10))) {
+            emailService.sendMail(user.getEmail(), "Asigurarea ta urmeaza sa expire in 10 zile!",
+                    "Salut" + " " + user.getLastName() + "," + "\n" + readFileForInsuranceWillExpireIn10Days());
+        } else if (reminderRepository.findReminderByCarId(carId)
+                .getRca()
+                .isEqual(LocalDate.now())) {
+            emailService.sendMail(user.getEmail(), "Atentie! Asigurarea ta a expirat!",
+                    "Salut" + " " + user.getLastName() + "," + "\n" + readFileForInsurance());
+
         }
     }
 
@@ -93,7 +112,17 @@ public class ReminderServiceImpl implements ReminderService {
     }
 
     public String readFileForItpWillExpiredIn10Days() throws IOException {
-        File resource = new ClassPathResource("textForItpWillExpiredIn10Days.txt").getFile();
+        File resource = new ClassPathResource("textForItpWillExpiredIn10Days.txttxt").getFile();
+        return new String(Files.readAllBytes(resource.toPath()));
+    }
+
+    public String readFileForInsuranceWillExpireIn10Days() throws IOException {
+        File resource = new ClassPathResource("textForInsuranceWillExpireIn10Days.txt").getFile();
+        return new String(Files.readAllBytes(resource.toPath()));
+    }
+
+    public String readFileForInsurance() throws IOException {
+        File resource = new ClassPathResource("textForInsuranceExpired.txt").getFile();
         return new String(Files.readAllBytes(resource.toPath()));
     }
 

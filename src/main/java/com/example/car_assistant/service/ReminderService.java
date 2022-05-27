@@ -17,4 +17,6 @@ public interface ReminderService {
     void deleteReminder(Long id);
 
     void expiredItp(Long userId, Long carId) throws IOException;
+
+    void expiredInsurance(Long userId, Long carId) throws IOException;
 }

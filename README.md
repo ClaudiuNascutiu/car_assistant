@@ -1,1 +1,1 @@
-This app is a reminder for everything releated to a car, like ITP, Insurance, Medical kit, Vignette, Fire extinguisher.
+This app is a reminder for everything related to a car. Like ITP, Insurance, Medical kit, Vignette, and Fire extinguisher.
